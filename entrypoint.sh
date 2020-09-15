@@ -26,7 +26,6 @@ COMMIT=$(jq -r ".pull_request.head.sha" "$GITHUB_EVENT_PATH")
 BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
 PR_NUMBER=$(jq -r ".number" "$GITHUB_EVENT_PATH")
 
-cat "$GITHUB_EVENT_PATH"
 echo "Triggering build on branch $BRANCH for commit $COMMIT and PR $PR_NUMBER"
 
 # Use jq’s --arg properly escapes string values for us
@@ -52,29 +51,8 @@ JSON=$(
     }'
 )
 
-# Merge in the build environment variables, if they specified any
-if [[ "${BUILD_ENV_VARS:-}" ]]; then
-  if ! JSON=$(echo "$JSON" | jq -c --argjson BUILD_ENV_VARS "$BUILD_ENV_VARS" '. + {env: $BUILD_ENV_VARS}'); then
-    echo ""
-    echo "Error: BUILD_ENV_VARS provided invalid JSON: $BUILD_ENV_VARS"
-    exit 1
-  fi
-fi
-
-
 curl \
   -X POST \
   -H "Authorization: Bearer ${BUILDKITE_API_ACCESS_TOKEN}" \
   "https://api.buildkite.com/v2/organizations/${ORG_SLUG}/pipelines/${PIPELINE_SLUG}/builds" \
   -d "$JSON"
-
-echo ""
-echo "Build created:"
-echo "$RESPONSE" | jq --raw-output ".web_url"
-
-# Save output for downstream actions
-echo "${RESPONSE}" > "${HOME}/${GITHUB_ACTION}.json"
-
-echo ""
-echo "Saved build JSON to:"
-echo "${HOME}/${GITHUB_ACTION}.json"
