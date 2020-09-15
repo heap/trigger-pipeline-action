@@ -1,3 +1,5 @@
+This is a fork of the Buildkite Pipeline Github Action that has specifically been doctored for the use case of triggering builds on pull requests. It will not work for any other use cases.
+
 # Trigger Buildkite Pipeline GitHub Action
 
 A [GitHub Action](https://github.com/actions) for triggering a build on a [Buildkite](https://buildkite.com/) pipeline.
