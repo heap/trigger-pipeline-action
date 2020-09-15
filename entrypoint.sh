@@ -22,7 +22,7 @@ MESSAGE="${MESSAGE:-}"
 NAME=$(jq -r ".pusher.name" "$GITHUB_EVENT_PATH")
 EMAIL=$(jq -r ".pusher.email" "$GITHUB_EVENT_PATH")
 
-COMMIT=$(jq -r ".after" "$GITHUB_EVENT_PATH")
+COMMIT=$(jq -r ".head.sha" "$GITHUB_EVENT_PATH")
 BRANCH=$(jq -r ".head.ref" "$GITHUB_EVENT_PATH")
 PR_NUMBER=$(jq -r ".number" "$GITHUB_EVENT_PATH")
 
