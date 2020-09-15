@@ -26,6 +26,9 @@ COMMIT=$(jq -r ".head.sha" "$GITHUB_EVENT_PATH")
 BRANCH=$(jq -r ".head.ref" "$GITHUB_EVENT_PATH")
 PR_NUMBER=$(jq -r ".number" "$GITHUB_EVENT_PATH")
 
+cat "$GITHUB_EVENT_PATH"
+echo "Triggering build on branch $BRANCH for commit $COMMIT and PR $PR_NUMBER"
+
 # Use jq’s --arg properly escapes string values for us
 JSON=$(
   jq -c -n \
